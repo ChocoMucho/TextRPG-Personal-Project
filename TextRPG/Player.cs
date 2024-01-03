@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -11,6 +12,17 @@ namespace TextRPG
 {
     public class Player
     {
+        //싱글톤
+        private static Player instance;
+        public static Player Instance
+        { get 
+            {
+                if (instance == null)
+                    instance = new Player();
+                return instance;
+            }
+        }
+
         public int Level { get; set; }
         public string Name { get; set; }
         public PlayerClass PlayerClass { get; set; }
@@ -86,6 +98,23 @@ namespace TextRPG
                 Console.ReadLine();
             }
             
+        }
+        public void Sell(Item item)
+        {
+            //85퍼 가격에 판매
+            Gold += (int)(item.Price * 0.85);
+            //판매시 장착 해제 -> 장착 개선기능에 영향 미칠 듯 하다.
+
+            //아이템 벗음
+            item.Equip(this);
+
+            //아이템에 세팅 전부 false
+            item.Isbought = false;
+            item.IsEquip = false;
+            
+            //인벤토리에서 제외함
+            int index = Inventory.IndexOf(item);
+            Inventory.RemoveAt(index);
         }
     }
 }

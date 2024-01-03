@@ -1,7 +1,5 @@
 ﻿namespace TextRPG
 {
-    
-
     public enum PlayerClass
     {
         None,
@@ -21,11 +19,19 @@
         Store,
     }
 
+    public enum StoreState
+    {
+        Main = 1,
+        Buy = 2,
+        Sell = 3,
+    }
+
     internal class Program
     {
         static void Main(string[] args)
         {
             Console.SetWindowSize(100, 50);
+            Player player= new Player();  
             Game game = new Game();
             while(true)
             {

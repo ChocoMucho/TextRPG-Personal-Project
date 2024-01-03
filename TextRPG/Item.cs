@@ -93,7 +93,7 @@ namespace TextRPG
             Defence = defence;
         }
 
-        public override void Equip(Player player)
+        public override void Equip(Player player)//입기 벗기 모두 함
         {
             if (!this.IsEquip)
             {

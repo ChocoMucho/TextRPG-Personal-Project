@@ -15,9 +15,9 @@ namespace TextRPG
     class Game
     {
         Scenes scenes = Scenes.Town;
-        Player player = new Player();
-        Merchant merchant = new Merchant();
-        bool isStoreActive = false;
+        Player player = Player.Instance;
+        Store store = new Store();
+
 
         public void Process()
         {
@@ -318,114 +318,23 @@ namespace TextRPG
             
             int index = 0;
 
-            //출력
-            Console.Clear();
-            Console.WriteLine(
-                ":##*                             .-:    \r\n" +
-                "-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%.  \r\n" +
-                "-@@@######%@@@##########@@@######@@@#   \r\n" +
-                ".++=   :===+++==========+++===:   .     \r\n" +
-                "       *@@%++*@@@@@@@@@@+++%@@+         \r\n" +
-                "       *@@@@@@@@@@@@@@@@@@@@@@+         \r\n" +
-                "       *@@@@@%%%%%%%%%%%%@@@@@+         \r\n" +
-                "       *@@@@:            =@@@@+         \r\n" +
-                "       *@@@@+============*@@@@+         \r\n" +
-                "       *@@@@@@@@@@@@@@@@@@@@@@+         \r\n" +
-                "       *@@@@=............+@@@@+         \r\n" +
-                "       *@@@@-............=@@@@+         \r\n" +
-                "       *@@@@@@@@@@@@@@@@@@@@@@+         \r\n" +
-                "       *@@@@@@@@@@@@@@@@@@@@@@+         \r\n" +
-                "       :*%@@@@@@@@@@@@@@@@@@%+:         \r\n" +
-                "           :=*%@@@@@@@@%*=:             \r\n" +
-                "                @@@@@@                  \r\n");
-            if(!isStoreActive)
-                Console.WriteLine("================= 상점 =================");
-            else
-                Console.WriteLine("========== 상점 - 아이템 구매 ==========");
-            Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.");
-            Console.WriteLine("========================================");
+            store.ShowStore();
 
             Console.WriteLine("\n[보유 골드]");
             Console.WriteLine($"{player.Gold} G");
 
-            Console.WriteLine("\n[아이템 목록]");
+            store.ShowItemList();
 
-            foreach(Item item in merchant.items)
-            {
-                string itemInfo = "- ";
-                if (isStoreActive)
-                    itemInfo = $"{++index} ";
-
-                itemInfo += $"{item.Name}\t";
-
-                if (item.Type == ItemType.Weapon)
-                    itemInfo += $"| 공격력 +{(item as Weapon).Attack}| ";
-                else if (item.Type == ItemType.Armor)
-                    itemInfo += $"| 방어력 +{(item as Armor).Defence}| ";
-                else if (item.Type == ItemType.Shield)
-                    itemInfo += $"| 방어력 +{(item as Shield).Defence}| ";
-
-                itemInfo += item.Desc;
-                if(item.Isbought)
-                {
-                    itemInfo += "| 구매 완료";
-                }
-                else
-                {
-                    itemInfo += $"| {item.Price} G";
-                }
-                
-
-                Console.WriteLine(itemInfo);
-            }
-
-            Console.WriteLine();
-            if (!isStoreActive) //상점 구매 비활성화
-                Console.WriteLine("1. 아이템 구매");
-                
-            Console.WriteLine("0. 나가기\n");
-            Console.WriteLine("원하시는 행동을 입력해주세요.");
-            Console.Write(">>");
+            store.ShowStoreHandle();
 
             playerInput = Console.ReadLine();
 
-            if (!isStoreActive)//구매 비활성화
-            {
-                switch (playerInput)
-                {
-                    case "0":
-                        scenes = Scenes.Town;
-                        break;
-                    case "1":
-                        isStoreActive = true;
-                        break;
-                }
-            }
-            else//구매 활성화
-            {
-                switch (playerInput)
-                {
-                    case "0":
-                        isStoreActive = false;
-                        break;
+            store.HandleStore(playerInput, ref scenes);
 
-                    default:
-                        
-                        if (int.TryParse(playerInput, out index) && 0 < index && index <= merchant.items.Count)
-                        {
-                            player.Buy(merchant.items[--index]);
-                        }
-                        else
-                        {
-                            WrongInput();
-                        }
-                        break;
-                }
-            }
         }
 
 
-        private void WrongInput()
+        public void WrongInput()
         {
             Console.Clear();
             Console.WriteLine(
