@@ -16,11 +16,11 @@ namespace TextRPG
 
         public Player player;
 
-        public Inventory() 
+        public Inventory(Player player) 
         { 
             items = new List<Item>();
             state = InventoryState.Main;
-            
+            this.player = player;
         }
         public List<Item> Items { get { return items; } }
         public void Add(Item item) { items.Add(item); }

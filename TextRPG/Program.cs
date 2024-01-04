@@ -16,6 +16,7 @@
         Status,
         Inventory,
         Store,
+        Dungeon,
     }
 
     public enum StoreState
@@ -37,6 +38,14 @@
         Main,
         Equip,
     }
+
+    public enum DungeonState
+    {
+        Main,
+        Clear,
+        Failure
+    }
+
 
     internal class Program
     {

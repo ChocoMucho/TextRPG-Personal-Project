@@ -29,13 +29,13 @@ namespace TextRPG
         public int Level { get; set; }
         public string Name { get; set; }
         public PlayerClass PlayerClass { get; set; }
-        public int Attack { get; set; }
-        public int AttackBonus { get; set; }
+        public float Attack { get; set; }
+        public float AttackBonus { get; set; }
 
         public int Defence { get; set; }
         public int DefenceBonus { get; set; }
             
-        public float Hp { get; set; }
+        public int Hp { get; set; }
         public int Gold { get; set; }
         //public List<Item> Inventory { get; set; }
 
@@ -44,8 +44,7 @@ namespace TextRPG
 
         public Player()
         {
-            inventory = new Inventory();
-            inventory.player = this;
+            inventory = new Inventory(this);
             slots = new Item[3];
             Level = 1;
             Gold = 1500;
@@ -134,6 +133,17 @@ namespace TextRPG
             //인벤토리에서 제외함
             int index = inventory.Items.IndexOf(item);
             inventory.Items.RemoveAt(index);
+        }
+
+        public bool IsDead()
+        {
+            if(Hp <= 0)
+            {
+                Hp = 0;
+                return true;
+            }
+            return false;
+
         }
     }
 }

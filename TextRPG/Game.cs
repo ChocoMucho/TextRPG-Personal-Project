@@ -18,12 +18,14 @@ namespace TextRPG
         public Player player;
         public Store store;
         public Inventory inventory;
+        public Dungeon dungeon;
 
         public Game()
         {
             player = Player.Instance;
             store = new Store();
             inventory = player.inventory;
+            dungeon = new Dungeon(player);
         }
 
         public void Process()
@@ -47,12 +49,12 @@ namespace TextRPG
                     Inventory();
                     break;
 
-                /*case Scenes.EquipManagement:
-                    EquipManagement();
-                    break;*/
-
                 case Scenes.Store:
                     Store(); 
+                    break;
+
+                case Scenes.Dungeon:
+                    Dungeon(); 
                     break;
             }
         }
@@ -92,6 +94,7 @@ namespace TextRPG
             Console.WriteLine("1. 상태 보기");
             Console.WriteLine("2. 인벤토리");
             Console.WriteLine("3. 상점");
+            Console.WriteLine("4. 던전 들어가기");
 
             Console.WriteLine("원하시는 행동을 입력해주세요.");
             Console.Write(">>");
@@ -109,6 +112,10 @@ namespace TextRPG
 
                 case "3":
                     scenes = Scenes.Store;
+                    break;
+
+                case "4":
+                    scenes = Scenes.Dungeon;
                     break;
 
                 default:
@@ -208,6 +215,21 @@ namespace TextRPG
 
         }
 
+        private void Dungeon()
+        {
+            //입력 데이터
+            string playerInput = "";
+
+            dungeon.ShowDungeon();
+
+            dungeon.ShowDungeonResult();
+
+            dungeon.ShowDungeonHandle();
+
+            playerInput = Console.ReadLine();
+
+            dungeon.DungeonHandle(playerInput, ref scenes);
+        }
 
         public void WrongInput()
         {
