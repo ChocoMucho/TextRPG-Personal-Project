@@ -36,6 +36,8 @@ namespace TextRPG
         public int Gold { get; set; }
         public List<Item> Inventory { get; set; }
 
+        public Item[] slots = new Item[3];
+
         public Player()
         {
             Level = 1;
@@ -55,15 +57,21 @@ namespace TextRPG
             
         }
 
-        /*public void EquipItem(int index)
+        public void Equip(Item item)
         {
-            //해당 인덱스 아이템 장착중 아니면 -> 장착, 추가 공격/방어력에 추가
-            if (!Inventory[index].IsEquip)
-                Inventory[index].IsEquip = true;
+            
+            if (null != slots[(int)item.Type])      //이미 슬롯이 차있다면
+                Unequip(slots[(int)item.Type]);     //슬롯에 있는 장비 해제 메서드 호출
 
-            else//장착 중이면 -> 장착 해제, 추가 공격/방어력에서 뺴기
-                Inventory[index].IsEquip = false;
-        }*/
+            slots[(int)item.Type] = item;           //새 장비로 슬롯 채움
+            item.Equip(this);                       //새 장비 장착
+        }
+
+        public void Unequip(Item item)
+        {
+            slots[(int)item.Type] = null;           //슬롯 비우기
+            item.Unequip(this);                     //아이템의 장착 해제 메서드 호출
+        }
 
         public void Buy(Item item) //장비 구매
         {

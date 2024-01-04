@@ -26,6 +26,13 @@
         Sell = 3,
     }
 
+    public enum ItemType
+    {
+        Weapon,
+        Armor,
+        Shield,
+    }
+
     internal class Program
     {
         static void Main(string[] args)

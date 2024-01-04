@@ -7,12 +7,7 @@ using System.Threading.Tasks;
 
 namespace TextRPG
 {
-    public enum ItemType
-    {
-        Weapon,
-        Armor,
-        Shield,
-    }
+    
     public abstract class Item
     {
         public string Name { get; private set; }
@@ -31,7 +26,9 @@ namespace TextRPG
             Isbought = false;
         }
 
-        public abstract void Equip(Player player); //장비 입고 벗음
+        public abstract void Equip(Player player); //장비 입음
+        public abstract void Unequip(Player player); //장비 벗음
+
         
     }
 
@@ -46,18 +43,14 @@ namespace TextRPG
 
         public override void Equip(Player player)
         {
-            //이 장비 장착중 아닐 때
-            if(!this.IsEquip)
-            {
-                this.IsEquip = true;
-                player.AttackBonus += this.Attack;
-            }
-            //이 장비 장착중일 때
-            else
-            {
-                this.IsEquip = false;
-                player.AttackBonus -= this.Attack;
-            }
+            this.IsEquip = true;
+            player.AttackBonus += this.Attack;
+        }
+
+        public override void Unequip(Player player)
+        {
+            this.IsEquip = false;
+            player.AttackBonus -= this.Attack;
         }
     }
     public class Armor : Item
@@ -71,17 +64,14 @@ namespace TextRPG
 
         public override void Equip(Player player)
         {
-            if (!this.IsEquip)
-            {
-                this.IsEquip = true;
-                player.DefenceBonus += this.Defence;
-            }
-            else
-            {
-                this.IsEquip = false;
-                player.DefenceBonus -= this.Defence;
-            }
-                
+            this.IsEquip = true;
+            player.DefenceBonus += this.Defence;
+        }
+
+        public override void Unequip(Player player)
+        {
+            this.IsEquip = false;
+            player.DefenceBonus -= this.Defence;
         }
     }
 
@@ -93,18 +83,16 @@ namespace TextRPG
             Defence = defence;
         }
 
-        public override void Equip(Player player)//입기 벗기 모두 함
+        public override void Equip(Player player)
         {
-            if (!this.IsEquip)
-            {
-                this.IsEquip = true;
-                player.DefenceBonus += this.Defence;
-            }
-            else
-            {
-                this.IsEquip = false;
-                player.DefenceBonus -= this.Defence;
-            }
+            this.IsEquip = true;
+            player.DefenceBonus += this.Defence;
+        }
+
+        public override void Unequip(Player player)
+        {
+            this.IsEquip = false;
+            player.DefenceBonus -= this.Defence;
         }
     }
 }

@@ -299,7 +299,7 @@ namespace TextRPG
                     //입력 값이 숫자 and 1 이상 and 인벤토리 총 수 보다 작음
                     if (int.TryParse(playerInput, out index) && 0 < index && index <= player.Inventory.Count)
                     {
-                        player.Inventory[--index].Equip(player);
+                        player.Equip(player.Inventory[--index]); //내 인벤토리에 있는 장비 장착
                     }
                     else
                     {
