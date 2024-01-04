@@ -19,9 +19,12 @@ namespace TextRPG
             {
                 if (instance == null)
                     instance = new Player();
+                
                 return instance;
             }
         }
+
+        public Inventory inventory;
 
         public int Level { get; set; }
         public string Name { get; set; }
@@ -31,18 +34,20 @@ namespace TextRPG
 
         public int Defence { get; set; }
         public int DefenceBonus { get; set; }
-
+            
         public float Hp { get; set; }
         public int Gold { get; set; }
-        public List<Item> Inventory { get; set; }
+        //public List<Item> Inventory { get; set; }
 
-        public Item[] slots = new Item[3];
+
+        public Item[] slots;
 
         public Player()
         {
+            inventory = new Inventory();
+            slots = new Item[3];
             Level = 1;
             Gold = 1500;
-            Inventory = new List<Item>();
             SetInfo();
         }
 
@@ -80,7 +85,7 @@ namespace TextRPG
 
         public void Buy(Item item) //장비 구매
         {
-            foreach(Item myItem in Inventory) // 이미 구매했는지 검사
+            foreach(Item myItem in inventory.Items) // 이미 구매했는지 검사
             {
                 if (myItem == item)
                 {
@@ -96,7 +101,7 @@ namespace TextRPG
             if(Gold >= item.Price)
             {
                 item.Isbought = true;
-                Inventory.Add(item);
+                inventory.Add(item);
                 Gold -= item.Price;
                 Console.ForegroundColor = ConsoleColor.Blue;
                 Console.WriteLine("구매 완료.");
@@ -126,8 +131,8 @@ namespace TextRPG
             item.IsEquip = false;
             
             //인벤토리에서 제외함
-            int index = Inventory.IndexOf(item);
-            Inventory.RemoveAt(index);
+            int index = inventory.Items.IndexOf(item);
+            inventory.Items.RemoveAt(index);
         }
     }
 }

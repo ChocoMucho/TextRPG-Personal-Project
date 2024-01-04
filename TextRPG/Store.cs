@@ -126,7 +126,7 @@ namespace TextRPG
                     break;
                 case StoreState.Sell: //상점 - 판매하기에서 보이는 내 아이템 리스트
                     index = 0;
-                    foreach (Item item in player.Inventory)
+                    foreach (Item item in player.inventory.Items)
                     {
                         string itemInfo = $"- {++index} {item.Name} | ";
 
@@ -177,7 +177,7 @@ namespace TextRPG
                     break;
             }    
         }
-        public void HandleStore(string playerInput, ref Scenes scenes)
+        public void StoreHandle(string playerInput, ref Scenes scenes)
         {
             int num = 0;
 
@@ -228,9 +228,9 @@ namespace TextRPG
                         break;
 
                     default:
-                        if (int.TryParse(playerInput, out num) && 0 < num && num <= player.Inventory.Count)
+                        if (int.TryParse(playerInput, out num) && 0 < num && num <= player.inventory.Items.Count)
                         {
-                            player.Sell(player.Inventory[--num]);
+                            player.Sell(player.inventory.Items[--num]);
                         }
                         else
                         {

@@ -15,15 +15,14 @@
         Town,
         Status,
         Inventory,
-        EquipManagement,
         Store,
     }
 
     public enum StoreState
     {
-        Main = 1,
-        Buy = 2,
-        Sell = 3,
+        Main,
+        Buy,
+        Sell,
     }
 
     public enum ItemType
@@ -31,6 +30,12 @@
         Weapon,
         Armor,
         Shield,
+    }
+
+    public enum InventoryState
+    {
+        Main,
+        Equip,
     }
 
     internal class Program

@@ -15,9 +15,16 @@ namespace TextRPG
     class Game
     {
         Scenes scenes = Scenes.Town;
-        Player player = Player.Instance;
-        Store store = new Store();
+        public Player player;
+        public Store store;
+        public Inventory inventory;
 
+        public Game()
+        {
+            player = Player.Instance;
+            store = new Store();
+            inventory = player.inventory;
+        }
 
         public void Process()
         {
@@ -40,9 +47,9 @@ namespace TextRPG
                     Inventory();
                     break;
 
-                case Scenes.EquipManagement:
+                /*case Scenes.EquipManagement:
                     EquipManagement();
-                    break;
+                    break;*/
 
                 case Scenes.Store:
                     Store(); 
@@ -169,154 +176,22 @@ namespace TextRPG
             //데이터
             string playerInput = "";
 
-            //출력
-            Console.Clear();
-            Console.WriteLine(
-                "                                        \n" +
-                "              .::------::.              \n" +
-                "           :-=---======---=-:           \n" +
-                "        .-=--==+========+==--=-.        \n" +
-                "       ---=+=======**=======+=---       \n" +
-                "     .=--+========*##*========+--=.     \n" +
-                "     =--+========*####*========+--=     \n" +
-                "    =--+========+##++##+========+--=    \n" +
-                "    +-=========*##+==+##+=========-+    \n" +
-                "    +-========*##*====*##*========-+    \n" +
-                "    +-=+=====+##*======*##+=====+=-+    \n" +
-                "    ---+====+##*========*##+====+---    \n" +
-                "     =--+=+#####========#####+=+--=     \n" +
-                "      =--======================--=      \n" +
-                "       :=--=+==============+=--=:       \n" +
-                "         -=--==============--=:         \n" +
-                "           .:-==--------==-:.           \n" +
-                "                .::::::.                \n");
-            Console.WriteLine("============= 인벤토리 =============");
-            Console.WriteLine("보유 중인 아이템을 관리할 수 있습니다.");
-            Console.WriteLine("===================================");
-            Console.WriteLine("\n[아이템 목록]");
-            
-            foreach(Item item in player.Inventory)
-            {
-                string itemInfo = "- ";
-                
-                if (item.IsEquip)
-                    itemInfo += "[E]";
-                
-                itemInfo += $"{item.Name}\t";
+            inventory.ShowInventory();
 
-                if (item.Type == ItemType.Weapon)
-                    itemInfo += $"| 공격력 +{(item as Weapon).Attack}| ";
-                else if (item.Type == ItemType.Armor)
-                    itemInfo += $"| 방어력 +{(item as Armor).Defence}| ";
-                else if (item.Type == ItemType.Shield)
-                    itemInfo += $"| 방어력 +{(item as Shield).Defence}| ";
+            inventory.ShowItemList();
 
-                itemInfo += item.Desc;
+            inventory.ShowInventoryHandle();
 
-                Console.WriteLine(itemInfo);
-            }
-
-            Console.WriteLine("\n1. 장착 관리");
-            Console.WriteLine("0. 나가기\n"); //마을로
-
-            Console.WriteLine("원하시는 행동을 입력해주세요.");
-            Console.Write(">>");
-            playerInput = Console.ReadLine();
-            switch (playerInput)
-            {
-                case "0":
-                    scenes = Scenes.Town;
-                    break;
-                case "1":
-                    scenes = Scenes.EquipManagement;
-                    break;
-            }
-        }
-
-        private void EquipManagement()//장착 관리
-        {
-            //데이터
-            string playerInput = "";
-            int index = 0;
-
-            Console.Clear();
-            Console.WriteLine(
-                "                    .:-------:                    \r\n" +
-                "                .-++.*+*--**#.**=-                \r\n" +
-                "              :=-#+#-+**=++*+=+*#.==.             \r\n" +
-                "             +*++:#=-.   :   :-===*+*=            \r\n" +
-                "           .+:+*+=.     =@.     :=+=:-+           \r\n" +
-                "           **++=-      :@@%       =+#+++          \r\n" +
-                "          =-++*=       %%=@#       *==:+.         \r\n" +
-                "          *==++       #@: +@+      -***+=         \r\n" +
-                "          #***#      +@=   #@-     --+=+=         \r\n" +
-                "          =:-===    -@#     %@.    +*+++.         \r\n" +
-                "           **+**- :+@@*.   :*@%+  +:*+++          \r\n" +
-                "           .*:-++=:::::    .:::::=*++.+           \r\n" +
-                "            .+***=+=-.       :-=*:+**=            \r\n" +
-                "              :+--***:***-+**:*#++-=.             \r\n" +
-                "                .-=#-:**# **+=:*=-                \r\n" +
-                "                    .--------:.                   \r\n");
-
-            Console.WriteLine("=============== 인벤토리 - 장착 관리 ===============");
-            Console.WriteLine("        보유 중인 아이템을 관리할 수 있습니다.        ");
-            Console.WriteLine("===================================================");
-            Console.WriteLine("\n[아이템 목록]");
-
-            
-            foreach (Item item in player.Inventory)
-            {
-                string itemInfo = $"- {++index} ";
-
-                if (item.IsEquip)
-                    itemInfo += "[E]";
-
-                itemInfo += $"{item.Name}\t";
-
-                if (item.Type == ItemType.Weapon)
-                    itemInfo += "| 공격력 | ";
-                else
-                    itemInfo += "| 방어력 | ";
-
-                itemInfo += item.Desc;
-
-                Console.WriteLine(itemInfo);
-            }
-
-            Console.WriteLine("\n0. 나가기\n"); //인벤토리로
-
-            Console.WriteLine("원하시는 행동을 입력해주세요.");
-            Console.Write(">>");
             playerInput = Console.ReadLine();
 
-            switch (playerInput)
-            {
-                case "0":
-                    scenes = Scenes.Inventory;
-                    break;
-
-                default:
-                    //입력 값이 숫자 and 1 이상 and 인벤토리 총 수 보다 작음
-                    if (int.TryParse(playerInput, out index) && 0 < index && index <= player.Inventory.Count)
-                    {
-                        player.Equip(player.Inventory[--index]); //내 인벤토리에 있는 장비 장착
-                    }
-                    else
-                    {
-                        WrongInput();
-                    }
-                    break;
-
-            }
-
+            inventory.InventoryHandle(playerInput, ref scenes);
         }
 
+      
         private void Store()
         {
             //데이터
             string playerInput = "";
-            
-            int index = 0;
 
             store.ShowStore();
 
@@ -329,7 +204,7 @@ namespace TextRPG
 
             playerInput = Console.ReadLine();
 
-            store.HandleStore(playerInput, ref scenes);
+            store.StoreHandle(playerInput, ref scenes);
 
         }
 
