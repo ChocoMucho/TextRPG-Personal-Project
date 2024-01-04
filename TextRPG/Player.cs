@@ -53,13 +53,18 @@ namespace TextRPG
             Attack = 10;
             Defence = 5;
             Hp = 100;
-
-            
         }
 
         public void Equip(Item item)
         {
-            
+            //슬롯에 있는 장비와 같은 장비라면
+            if (slots[(int)item.Type] == item)
+            {
+                Unequip(slots[(int)item.Type]);
+                return;
+            }
+
+
             if (null != slots[(int)item.Type])      //이미 슬롯이 차있다면
                 Unequip(slots[(int)item.Type]);     //슬롯에 있는 장비 해제 메서드 호출
 
@@ -114,7 +119,7 @@ namespace TextRPG
             //판매시 장착 해제 -> 장착 개선기능에 영향 미칠 듯 하다.
 
             //아이템 벗음
-            item.Equip(this);
+            Unequip(item);
 
             //아이템에 세팅 전부 false
             item.Isbought = false;
