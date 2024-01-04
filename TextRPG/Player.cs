@@ -45,6 +45,7 @@ namespace TextRPG
         public Player()
         {
             inventory = new Inventory();
+            inventory.player = this;
             slots = new Item[3];
             Level = 1;
             Gold = 1500;

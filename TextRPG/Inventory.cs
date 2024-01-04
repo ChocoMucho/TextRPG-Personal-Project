@@ -20,7 +20,7 @@ namespace TextRPG
         { 
             items = new List<Item>();
             state = InventoryState.Main;
-            player = Player.Instance;
+            
         }
         public List<Item> Items { get { return items; } }
         public void Add(Item item) { items.Add(item); }
