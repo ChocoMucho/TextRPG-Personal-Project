@@ -221,8 +221,11 @@ namespace TextRPG
                     return;
                 }
 
+                //보상 등 클리어 후 처리
                 state = DungeonState.Clear;
                 player.Gold += reward;
+                ++player.ClearCount;
+                player.LevelUp();
             }
         }
 

@@ -27,6 +27,7 @@ namespace TextRPG
         public Inventory inventory;
 
         public int Level { get; set; }
+        public int ClearCount { get; set; }
         public string Name { get; set; }
         public PlayerClass PlayerClass { get; set; }
         public float Attack { get; set; }
@@ -47,7 +48,11 @@ namespace TextRPG
             inventory = new Inventory(this);
             slots = new Item[3];
             Level = 1;
+            ClearCount = 0;
             Gold = 1500;
+            AttackBonus = 0;
+            DefenceBonus = 0;
+
             SetInfo();
         }
 
@@ -144,6 +149,50 @@ namespace TextRPG
             }
             return false;
 
+        }
+
+        public void LevelUp()
+        {
+            //레벨 만큼 클리어하면
+            //레벨 + 1, 공격력 +0.5, 방어력 +1
+
+            if(Level <= ClearCount)
+            {
+                ClearCount = 0;
+                ++Level;
+                Attack += 0.5f;
+                ++Defence;
+                ShowLevelUp();
+            }
+        }
+
+        public void ShowLevelUp()
+        {
+            Console.Clear();
+            Console.WriteLine(
+                "     --        ------: --    :-.  ------: -:          \r\n" +
+                "     %%.     -+#*****+.%%    #%:=+#*****=:%#          \r\n" +
+                "     %%.     +%%##=   .%%    #%:*%##*-   :%#          \r\n" +
+                "     %%-:::: +%*-=-::. :+%*=%#: *%+=-:::.:%%:::::     \r\n" +
+                "     *######-  ***###*    *#     .*#**+*=:#######     \r\n" +
+                "                                                      \r\n" +
+                "     :::::           ::::.  .::::::::::::::::         \r\n" +
+                "     #####           ####+  =################.        \r\n" +
+                "     #####           ####+  =################-:::     \r\n" +
+                "     #####           ####+  =####:..........*####     \r\n" +
+                "     #####           ####+  =####-::::::::::*####     \r\n" +
+                "     #####           ####+  =################:        \r\n" +
+                "     #####           ####+  =##########*#####.        \r\n" +
+                "     #####           ####+  =####:                    \r\n" +
+                "     #####-----------####+  =####.                    \r\n" +
+                "         ############*      =####.                    \r\n" +
+                "         ############*      =####.                    \r\n");
+
+            Console.WriteLine($"Lv.{Level-1} -> Lv.{Level}");
+            Console.WriteLine("레벨업 하였습니다.\n");
+
+            Console.Write("돌아가기...");
+            Console.ReadLine();
         }
     }
 }
