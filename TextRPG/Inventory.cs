@@ -6,15 +6,23 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
+// 인벤토리의 현재 상태를 나타낼 용도
+public enum InventoryState
+{
+    Main,
+    Equip,
+}
+
 namespace TextRPG
 {
     public class Inventory
     {
         InventoryState state;
         
-        private List<Item> items; //아이템을 가지고 있을 리스트
+        private List<Item>  items; 
 
-        public Player player;
+        public Player       player;
+
 
         public Inventory(Player player) 
         { 
@@ -22,6 +30,7 @@ namespace TextRPG
             state = InventoryState.Main;
             this.player = player;
         }
+
         public List<Item> Items 
         { 
             get { return items; } 
@@ -33,7 +42,7 @@ namespace TextRPG
 
 
 
-        //Store 처럼 출력 함수를 제작
+        //========== Game에서 호출될 함수 ==========
         public void ShowInventory()
         {
             //출력
@@ -60,12 +69,14 @@ namespace TextRPG
 
             switch(state)
             {
+                //메인 상태 시 출력
                 case InventoryState.Main:
                     Console.WriteLine("============= 인벤토리 =============");
                     Console.WriteLine("보유 중인 아이템을 관리할 수 있습니다.");
                     Console.WriteLine("===================================");
                     Console.WriteLine("\n[아이템 목록]");
                     break;
+                //장착 관리 상태 시 출력
                 case InventoryState.Equip:
                     Console.WriteLine("======= 인벤토리 - 장착 관리 =======");
                     Console.WriteLine("보유 중인 아이템을 관리할 수 있습니다.");
@@ -74,12 +85,14 @@ namespace TextRPG
                     break;
             }
         }
+
         public void ShowItemList()
         {
-            int index = 0; //아이템 넘버링
+            int index = 0;
 
             switch(state) 
             { 
+                // 메인 상태 시 플레이어가 가진 아이템 목록 출력
                 case InventoryState.Main:
                     foreach (Item item in items)
                     {
@@ -102,7 +115,8 @@ namespace TextRPG
                         Console.WriteLine(itemInfo);
                     }
                     break;
-
+                // 장착 관리 상태 시 플레이어가 가진 아이템 목록 출력
+                // 선택 위해 넘버링도 출력
                 case InventoryState.Equip:
                     foreach (Item item in items)
                     {
@@ -125,6 +139,8 @@ namespace TextRPG
                     break;
             }
         }
+
+        // 상태에 따른 선택 메뉴 출력
         public void ShowInventoryMenu()
         {
             switch (state)
@@ -146,10 +162,13 @@ namespace TextRPG
                     break;
             }
         }
+
+        //사용자 입력을 받아 로직 진행
         public void SelectMenu(string playerInput, ref Scenes scene)
         {
             int index = 0; // 아이템 인덱싱
 
+            // 메인 상태인 경우
             if(state == InventoryState.Main)
             {
                 switch (playerInput)
@@ -157,21 +176,22 @@ namespace TextRPG
                     case "0": // 마을로 나가기
                         scene = Scenes.Town;
                         break;
-                    case "1": // 인벤토리 장착 화면으로
+                    case "1": // 장착 관리 상태로 전환
                         state = InventoryState.Equip;
                         break;
                 }
             }
+            //장착 관리 상태인 경우
             else if(state == InventoryState.Equip)
             {
                 switch (playerInput)
                 {
-                    case "0":
+                    case "0": // 메인 상태로 되돌아가기
                         state = InventoryState.Main;
                         break;
 
+                    // 입력 숫자에 맞는 아이템 장착
                     default:
-                        //입력 값이 숫자 and 1 이상 and 인벤토리 총 수 보다 작음
                         if (int.TryParse(playerInput, out index) && 0 < index && index <= items.Count)
                         {
                             player.Equip(items[--index]); //내 인벤토리에 있는 장비 장착
@@ -185,6 +205,9 @@ namespace TextRPG
                 }
             }
         }
+        //========== Game에서 호출될 함수 ==========
+
+
         public void WrongInput()
         {
             Console.Clear();

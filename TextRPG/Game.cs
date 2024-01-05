@@ -7,32 +7,44 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
+// 장면을 열거형으로 정의
+public enum Scenes
+{
+    None,
+    Town,
+    Status,
+    Inventory,
+    Store,
+    Dungeon,
+    Inn,
+}
 
-
-// 여기서는 로비, 상태창 등으로 가는 함수를 호출
 namespace TextRPG
 {
     class Game
     {
-        Scenes scene = Scenes.Town;
-        public Player player;
-        public Store store;
-        public Inventory inventory;
-        public Dungeon dungeon;
-        public Inn inn;
+        private Scenes scene = Scenes.Town;
+        private Player player;
+        private Store store;
+        private Inventory inventory;
+        private Dungeon dungeon;
+        private Inn inn;
 
         public Game()
         {
-            player = Player.Instance;
-            store = new Store();
-            inventory = player.inventory;
+            player = new Player();
+            store = new Store(player);
+            inventory = new Inventory(player);
             dungeon = new Dungeon(player);
             inn = new Inn(player);
+
+            player.Inventory = inventory;
         }
 
+        
         public void Process()
         {
-            //현재 씬에 따라서 호출
+            //현재 장면에 맞춰서 메서드를 호출
             switch (scene)
             {
                 case Scenes.None:
@@ -67,7 +79,7 @@ namespace TextRPG
 
         private void Town()
         {
-            //데이터
+            //입력 데이터
             string playerInput = "";
 
             //출력
@@ -107,6 +119,7 @@ namespace TextRPG
             Console.WriteLine("원하시는 행동을 입력해주세요.");
             Console.Write(">>");
             
+            //입력 값에 따라서 현재 장면을 전환한다.
             playerInput = Console.ReadLine();
             switch (playerInput)
             {
@@ -190,9 +203,8 @@ namespace TextRPG
             }
         }
 
-        private void Inventory()//인벤토리
+        private void Inventory()
         {
-            //데이터
             string playerInput = "";
 
             inventory.ShowInventory();
@@ -208,7 +220,6 @@ namespace TextRPG
 
         private void Store()
         {
-            //데이터
             string playerInput = "";
 
             store.ShowStore();
@@ -228,7 +239,6 @@ namespace TextRPG
 
         private void Dungeon()
         {
-            //입력 데이터
             string playerInput = "";
 
             dungeon.ShowDungeon();
@@ -242,10 +252,8 @@ namespace TextRPG
             dungeon.SelectMenu(playerInput, ref scene);
         }
 
-
         public void Inn()
         {
-            //입력 데이터
             string playerInput = "";
 
             inn.ShowInn();

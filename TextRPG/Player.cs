@@ -6,15 +6,22 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-
+//플레이어 직업 열거형
+public enum PlayerClass
+{
+    None,
+    Warrior,
+    Archer,
+    Sorcerer,
+}
 
 namespace TextRPG
 {
     public class Player
     {
         //싱글톤
-        private static Player instance;
-        public static Player Instance
+        /*private static Player   instance;
+        public static Player    Instance
         { get 
             {
                 if (instance == null)
@@ -22,30 +29,32 @@ namespace TextRPG
                 
                 return instance;
             }
-        }
+        }*/
 
-        public Inventory inventory;
+        
 
-        public int Level { get; set; }
-        public int ClearCount { get; set; }
-        public string Name { get; set; }
-        public PlayerClass PlayerClass { get; set; }
-        public float Attack { get; set; }
-        public float AttackBonus { get; set; }
+        //========== 플레이어 기본 정보 ==========
+        public int          Level { get; set; }
+        public int          ClearCount { get; set; }
+        public string       Name { get; set; }
+        public PlayerClass  PlayerClass { get; set; }
+        public float        Attack { get; set; }
+        public float        AttackBonus { get; set; }
 
-        public int Defence { get; set; }
-        public int DefenceBonus { get; set; }
+        public int          Defence { get; set; }
+        public int          DefenceBonus { get; set; }
             
-        public int Hp { get; set; }
-        public int Gold { get; set; }
-        //public List<Item> Inventory { get; set; }
+        public int          Hp { get; set; }
+        public int          Gold { get; set; }
 
+        //========= 인벤토리 =========
+        public Inventory Inventory { get; set; }
 
-        public Item[] slots;
+        //========== 장비 슬롯 ==========
+        public Item[]       slots;
 
         public Player()
         {
-            inventory = new Inventory(this);
             slots = new Item[3];
             Level = 1;
             ClearCount = 0;
@@ -65,32 +74,35 @@ namespace TextRPG
             Hp = 100;
         }
 
+        //========== 장비 장착, 해제 ==========
         public void Equip(Item item)
         {
-            //슬롯에 있는 장비와 같은 장비라면
             if (slots[(int)item.Type] == item)
             {
                 Unequip(slots[(int)item.Type]);
                 return;
             }
 
+            // 이미 슬롯이 차있으면 그 슬롯의 장비 해제
+            if (null != slots[(int)item.Type])      
+                Unequip(slots[(int)item.Type]);     
 
-            if (null != slots[(int)item.Type])      //이미 슬롯이 차있다면
-                Unequip(slots[(int)item.Type]);     //슬롯에 있는 장비 해제 메서드 호출
-
-            slots[(int)item.Type] = item;           //새 장비로 슬롯 채움
-            item.Equip(this);                       //새 장비 장착
+            // 슬롯에 아이템 할당, 장착
+            slots[(int)item.Type] = item;           
+            item.Equip(this);                       
         }
 
         public void Unequip(Item item)
         {
-            slots[(int)item.Type] = null;           //슬롯 비우기
-            item.Unequip(this);                     //아이템의 장착 해제 메서드 호출
+            slots[(int)item.Type] = null;           
+            item.Unequip(this);                     
         }
 
-        public void Buy(Item item) //장비 구매
+        //========== 장비 구매, 판매 ==========
+        public void Buy(Item item) 
         {
-            foreach(Item myItem in inventory.Items) // 이미 구매했는지 검사
+            // 인벤토리와 대조해서 구매했는지 검사
+            foreach (Item myItem in Inventory.Items) 
             {
                 if (myItem == item)
                 {
@@ -106,7 +118,7 @@ namespace TextRPG
             if(Gold >= item.Price)
             {
                 item.Isbought = true;
-                inventory.Add(item);
+                Inventory.Add(item);
                 Gold -= item.Price;
                 Console.ForegroundColor = ConsoleColor.Blue;
                 Console.WriteLine("구매 완료.");
@@ -124,22 +136,23 @@ namespace TextRPG
         }
         public void Sell(Item item)
         {
-            //85퍼 가격에 판매
+            //85% 가격에 판매
             Gold += (int)(item.Price * 0.85);
-            //판매시 장착 해제 -> 장착 개선기능에 영향 미칠 듯 하다.
 
-            //아이템 벗음
+            //아이템 장착 해제
             Unequip(item);
 
-            //아이템에 세팅 전부 false
+            //아이템의 세팅 전부 false
             item.Isbought = false;
             item.IsEquip = false;
             
             //인벤토리에서 제외함
-            int index = inventory.Items.IndexOf(item);
-            inventory.Items.RemoveAt(index);
+            int index = Inventory.Items.IndexOf(item);
+            Inventory.Items.RemoveAt(index);
         }
 
+
+        //========= 던전 입장 기능에 사용하는 함수들 =========
         public bool IsDead()
         {
             if(Hp <= 0)

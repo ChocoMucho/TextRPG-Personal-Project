@@ -8,18 +8,28 @@ using System.Threading.Tasks;
 using static System.Formats.Asn1.AsnWriter;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
+//상점의 상태를 나타내는 열거형
+public enum StoreState
+{
+    Main,
+    Buy,
+    Sell,
+}
+
 namespace TextRPG
 {
     
-    internal class Store // 상점 상태에 따라서 다른 내용을 보여주거나 다른 행동을 하게 설계함
+    internal class Store
     {
-        public StoreState state = StoreState.Main;
-        public List<Item> items = new List<Item>();
-        public Player player = Player.Instance;
+        public StoreState   state = StoreState.Main;      
+        public List<Item>   items = new List<Item>();     
+        public Player       player;
 
-        public Store() //파일 저장이 없어 하드코딩
+        public Store(Player player) 
         {
+            this.player = player;
 
+            //파일 저장이 없어 하드코딩
             items.Add(new Weapon("낡은 직검", "쉽게 볼 수 있는 낡은 직검입니다.", 2, 600));
             items.Add(new Weapon("청동 도끼", "어디선가 사용된 느낌의 도끼입니다.", 5, 1500));
             items.Add(new Weapon("스파르타의 창", "스파르타의 전사들이 사용했다는 전설의 창입니다.", 7, 3000));
@@ -33,6 +43,7 @@ namespace TextRPG
             items.Add(new Shield("스파르타의 방패", "Λ가 새겨진 전사의 방패입니다.", 8, 2000));
         }
 
+        //========== Game에서 호출될 함수 ==========
         public void ShowStore()
         {
             //출력
@@ -58,16 +69,21 @@ namespace TextRPG
 
             switch (state)
             {
+                // Main 상태 시 출력
                 case StoreState.Main:
                     Console.WriteLine("================= 상점 =================");
                     Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.");
                     Console.WriteLine("========================================");
                     break;
+
+                // Buy 상태 시 출력
                 case StoreState.Buy:
                     Console.WriteLine("========== 상점 - 아이템 구매 ==========");
                     Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.");
                     Console.WriteLine("========================================");
                     break;
+
+                // Sell 상태 시 출력
                 case StoreState.Sell:
                     Console.WriteLine("========== 상점 - 아이템 판매 ==========");
                     Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.");
@@ -77,15 +93,17 @@ namespace TextRPG
                     
                     break;
             }
-        }
-        public void ShowItemList()
+        }  
+
+        // 아이템 리스트 출력
+        public void ShowItemList()  
         {
             Console.WriteLine("\n[아이템 목록]");
             int index = 0;
             switch (state)
             {
-                
-                case StoreState.Main: //상점 메인에 보이는 아이템 리스트
+                //Main 상태 시 상점의 아이템 모두 출력
+                case StoreState.Main: 
                     foreach (Item item in items)
                     {
                         string itemInfo = $"- {item.Name} | ";
@@ -104,7 +122,10 @@ namespace TextRPG
                         Console.WriteLine(itemInfo);
                     }
                     break;
-                case StoreState.Buy: //상점 - 구매하기에서 보이는 아이템 리스트
+
+                //Buy 상태 시 상점의 아이템 모두 출력
+                //선택을 위한 넘버링 추가
+                case StoreState.Buy:
                     index = 0;
                     foreach (Item item in items)
                     {
@@ -124,9 +145,11 @@ namespace TextRPG
                         Console.WriteLine(itemInfo);
                     }
                     break;
-                case StoreState.Sell: //상점 - 판매하기에서 보이는 내 아이템 리스트
+
+                //Sell 상태 시 플레이어 인벤토리의 아이템 모두 출력
+                case StoreState.Sell: 
                     index = 0;
-                    foreach (Item item in player.inventory.Items)
+                    foreach (Item item in player.Inventory.Items)
                     {
                         string itemInfo = $"- {++index} {item.Name} | ";
 
@@ -139,7 +162,7 @@ namespace TextRPG
 
                         itemInfo += item.Desc;
 
-                        itemInfo += $"| {item.Price} G";
+                        itemInfo += $"| 재판매 : {item.Price * 0.85f} G";
 
                         Console.WriteLine(itemInfo);
                     }
@@ -149,6 +172,8 @@ namespace TextRPG
             }
 
         }
+
+        // 선택 메뉴 출력
         public void ShowStoreMenu()
         {
             switch(state)
@@ -177,11 +202,14 @@ namespace TextRPG
                     break;
             }    
         }
+
+        // 사용자 입력에 따른 로직 진행
         public void SelectMenu(string playerInput, ref Scenes scene)
         {
             int num = 0;
 
-            if(state == StoreState.Main)// 상점 상태 Main
+            // 상점 상태 Main
+            if (state == StoreState.Main)
             {
                 switch (playerInput)
                 {
@@ -197,7 +225,9 @@ namespace TextRPG
                         break;
                 }
             }
-            else if (state == StoreState.Buy)// 상점 상태 Buy
+
+            // 상점 상태 Buy
+            else if (state == StoreState.Buy)
             {
                 switch (playerInput)
                 {
@@ -206,6 +236,7 @@ namespace TextRPG
                         state = StoreState.Main;
                         break;
 
+                    // 입력 값에 맞게 상점 아이템 구매
                     default:
                         if (int.TryParse(playerInput, out num) && 0 < num && num <= items.Count)
                         {
@@ -218,7 +249,9 @@ namespace TextRPG
                         break;
                 }
             }
-            else if (state == StoreState.Sell)// 상점 상태 Sell
+
+            // 상점 상태 Sell
+            else if (state == StoreState.Sell)
             {
                 switch (playerInput)
                 {
@@ -227,10 +260,11 @@ namespace TextRPG
                         state = StoreState.Main;
                         break;
 
+                    // 입력 값에 맞게 플레이어 아이템 판매
                     default:
-                        if (int.TryParse(playerInput, out num) && 0 < num && num <= player.inventory.Items.Count)
+                        if (int.TryParse(playerInput, out num) && 0 < num && num <= player.Inventory.Items.Count)
                         {
-                            player.Sell(player.inventory.Items[--num]);
+                            player.Sell(player.Inventory.Items[--num]);
                         }
                         else
                         {
@@ -241,6 +275,7 @@ namespace TextRPG
             }
 
         }
+        //========== Game에서 호출될 함수 ==========
 
         public void WrongInput()
         {

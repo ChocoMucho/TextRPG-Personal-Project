@@ -66,27 +66,29 @@ namespace TextRPG
         // =========Game에서 호출할 함수들=========
 
 
-        // =========서브로 호출되는 함수들=========
-        public void Rest(Player player, ref Scenes scene) //휴식 로직
+        //========== 본 클래스의 메서드에서 호출될 함수 ==========
+        //휴식 기능 메서드
+        public void Rest(Player player, ref Scenes scene)
         {
+            //골드가 500이상이면 휴식 성공
             if(player.Gold >= 500)
             {
                 player.Hp = 100;
                 player.Gold -= 500;
                 ShowRest();
             }
+            //골드 500미만이면 장면 Town으로 전환
             else
             {
-                //장면도 바꾸고
                 scene = Scenes.Town;
                 ShowKicked();
             }
         }
 
-        public void ShowRest() //휴식 성공 시에 출력되는 함수
+        //휴식 성공 시에 출력되는 함수
+        public void ShowRest()
         {
             Console.Clear();
-            //휴식 잘 한 장면만 출력
             Console.WriteLine(
                 "                .===++++++**+-                    \r\n" +
                 "                #%%%%%%%%%%%%%                    \r\n" +
@@ -113,7 +115,8 @@ namespace TextRPG
             Console.ReadLine();
         }
 
-        public void ShowKicked() //돈이 없어 휴식 실패하고 쫓겨나면 출력되는 함수
+        //휴식 실패하면 출력되는 함수
+        public void ShowKicked()
         {
             Console.Clear();
             Console.WriteLine(
@@ -145,6 +148,6 @@ namespace TextRPG
             Console.Write("엔터 눌러서 마을로 돌아가기...");
             Console.ReadLine();
         }
-        // =========서브로 호출되는 함수들=========
+        //========== 본 클래스의 메서드에서 호출될 함수 ==========
     }
 }
