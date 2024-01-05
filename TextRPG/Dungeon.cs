@@ -100,7 +100,7 @@ namespace TextRPG
             }
         }
 
-        public void ShowDungeonHandle()
+        public void ShowDungeonMenu()
         {
             switch (state)
             {
@@ -120,7 +120,7 @@ namespace TextRPG
             Console.WriteLine(">>>");
         }
 
-        public void DungeonHandle(string playerInput, ref Scenes scenes)
+        public void SelectMenu(string playerInput, ref Scenes scene)
         {
             int index = 0; //던전 난이도 선택용
             if (state == DungeonState.Main)
@@ -128,7 +128,7 @@ namespace TextRPG
                 switch (playerInput)
                 {
                     case "0": // 마을로 나가기
-                        scenes = Scenes.Town;
+                        scene = Scenes.Town;
                         break;
                     case "1": // 쉬운 던전
                         EnterDungeon(DungeonDifficulty.Easy);
@@ -146,7 +146,7 @@ namespace TextRPG
             {
                 switch (playerInput)
                 {
-                    case "0": // 마을로 나가기
+                    case "0": // Main으로 돌아가기
                         state = DungeonState.Main;
                         break;
                 }

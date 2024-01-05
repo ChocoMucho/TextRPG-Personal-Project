@@ -17,6 +17,7 @@
         Inventory,
         Store,
         Dungeon,
+        Inn,
     }
 
     public enum StoreState

@@ -11,8 +11,8 @@ namespace TextRPG
     public class Inventory
     {
         InventoryState state;
-        //아이템을 가지고 있을 리스트
-        private List<Item> items;
+        
+        private List<Item> items; //아이템을 가지고 있을 리스트
 
         public Player player;
 
@@ -22,8 +22,14 @@ namespace TextRPG
             state = InventoryState.Main;
             this.player = player;
         }
-        public List<Item> Items { get { return items; } }
-        public void Add(Item item) { items.Add(item); }
+        public List<Item> Items 
+        { 
+            get { return items; } 
+        }
+        public void Add(Item item) 
+        { 
+            items.Add(item); 
+        }
 
 
 
@@ -67,8 +73,6 @@ namespace TextRPG
                     Console.WriteLine("\n[아이템 목록]");
                     break;
             }
-            
-
         }
         public void ShowItemList()
         {
@@ -121,7 +125,7 @@ namespace TextRPG
                     break;
             }
         }
-        public void ShowInventoryHandle()
+        public void ShowInventoryMenu()
         {
             switch (state)
             {
@@ -142,7 +146,7 @@ namespace TextRPG
                     break;
             }
         }
-        public void InventoryHandle(string playerInput, ref Scenes scenes)
+        public void SelectMenu(string playerInput, ref Scenes scene)
         {
             int index = 0; // 아이템 인덱싱
 
@@ -151,7 +155,7 @@ namespace TextRPG
                 switch (playerInput)
                 {
                     case "0": // 마을로 나가기
-                        scenes = Scenes.Town;
+                        scene = Scenes.Town;
                         break;
                     case "1": // 인벤토리 장착 화면으로
                         state = InventoryState.Equip;

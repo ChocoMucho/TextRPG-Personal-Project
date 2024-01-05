@@ -149,7 +149,7 @@ namespace TextRPG
             }
 
         }
-        public void ShowStoreHandle()
+        public void ShowStoreMenu()
         {
             switch(state)
             {
@@ -177,7 +177,7 @@ namespace TextRPG
                     break;
             }    
         }
-        public void StoreHandle(string playerInput, ref Scenes scenes)
+        public void SelectMenu(string playerInput, ref Scenes scene)
         {
             int num = 0;
 
@@ -186,7 +186,7 @@ namespace TextRPG
                 switch (playerInput)
                 {
                     case "0": // 마을로 나가기
-                        scenes = Scenes.Town;
+                        scene = Scenes.Town;
                         state = StoreState.Main;
                         break;
                     case "1": // 구매 화면
@@ -202,7 +202,7 @@ namespace TextRPG
                 switch (playerInput)
                 {
                     case "0": // 상점으로 나가기
-                        scenes = Scenes.Store;
+                        scene = Scenes.Store;
                         state = StoreState.Main;
                         break;
 
@@ -223,7 +223,7 @@ namespace TextRPG
                 switch (playerInput)
                 {
                     case "0": // 상점으로 나가기
-                        scenes = Scenes.Store;
+                        scene = Scenes.Store;
                         state = StoreState.Main;
                         break;
 

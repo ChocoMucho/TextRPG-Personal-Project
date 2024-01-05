@@ -14,11 +14,12 @@ namespace TextRPG
 {
     class Game
     {
-        Scenes scenes = Scenes.Town;
+        Scenes scene = Scenes.Town;
         public Player player;
         public Store store;
         public Inventory inventory;
         public Dungeon dungeon;
+        public Inn inn;
 
         public Game()
         {
@@ -26,15 +27,16 @@ namespace TextRPG
             store = new Store();
             inventory = player.inventory;
             dungeon = new Dungeon(player);
+            inn = new Inn(player);
         }
 
         public void Process()
         {
             //현재 씬에 따라서 호출
-            switch (scenes)
+            switch (scene)
             {
                 case Scenes.None:
-                    scenes = Scenes.Town;
+                    scene = Scenes.Town;
                     break;
 
                 case Scenes.Town:
@@ -55,6 +57,10 @@ namespace TextRPG
 
                 case Scenes.Dungeon:
                     Dungeon(); 
+                    break;
+
+                case Scenes.Inn:
+                    Inn();
                     break;
             }
         }
@@ -95,6 +101,8 @@ namespace TextRPG
             Console.WriteLine("2. 인벤토리");
             Console.WriteLine("3. 상점");
             Console.WriteLine("4. 던전 들어가기");
+            Console.WriteLine("5. 여관에서 휴식하기");
+
 
             Console.WriteLine("원하시는 행동을 입력해주세요.");
             Console.Write(">>");
@@ -103,19 +111,23 @@ namespace TextRPG
             switch (playerInput)
             {
                 case "1":
-                    scenes = Scenes.Status;
+                    scene = Scenes.Status;
                     break;
 
                 case "2":
-                    scenes = Scenes.Inventory;
+                    scene = Scenes.Inventory;
                     break;
 
                 case "3":
-                    scenes = Scenes.Store;
+                    scene = Scenes.Store;
                     break;
 
                 case "4":
-                    scenes = Scenes.Dungeon;
+                    scene = Scenes.Dungeon;
+                    break;
+
+                case "5":
+                    scene = Scenes.Inn;
                     break;
 
                 default:
@@ -173,7 +185,7 @@ namespace TextRPG
             switch (playerInput)
             {
                 case "0":
-                    scenes = Scenes.Town;
+                    scene = Scenes.Town;
                     break;
             }
         }
@@ -187,14 +199,13 @@ namespace TextRPG
 
             inventory.ShowItemList();
 
-            inventory.ShowInventoryHandle();
+            inventory.ShowInventoryMenu();
 
             playerInput = Console.ReadLine();
 
-            inventory.InventoryHandle(playerInput, ref scenes);
+            inventory.SelectMenu(playerInput, ref scene);
         }
 
-      
         private void Store()
         {
             //데이터
@@ -207,11 +218,11 @@ namespace TextRPG
 
             store.ShowItemList();
 
-            store.ShowStoreHandle();
+            store.ShowStoreMenu();
 
             playerInput = Console.ReadLine();
 
-            store.StoreHandle(playerInput, ref scenes);
+            store.SelectMenu(playerInput, ref scene);
 
         }
 
@@ -224,11 +235,26 @@ namespace TextRPG
 
             dungeon.ShowDungeonResult();
 
-            dungeon.ShowDungeonHandle();
+            dungeon.ShowDungeonMenu();
 
             playerInput = Console.ReadLine();
 
-            dungeon.DungeonHandle(playerInput, ref scenes);
+            dungeon.SelectMenu(playerInput, ref scene);
+        }
+
+
+        public void Inn()
+        {
+            //입력 데이터
+            string playerInput = "";
+
+            inn.ShowInn();
+
+            inn.ShowInnMenu();
+
+            playerInput = Console.ReadLine();
+
+            inn.SelectMenu(playerInput, ref scene);
         }
 
         public void WrongInput()
