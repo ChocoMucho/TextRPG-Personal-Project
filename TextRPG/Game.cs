@@ -115,6 +115,8 @@ namespace TextRPG
             Console.WriteLine("4. 던전 들어가기");
             Console.WriteLine("5. 여관에서 휴식하기");
 
+            Console.WriteLine("\n9. 게임 끝내기");
+
 
             Console.WriteLine("원하시는 행동을 입력해주세요.");
             Console.Write(">>");
@@ -143,6 +145,9 @@ namespace TextRPG
                     scene = Scenes.Inn;
                     break;
 
+                case "9":
+                    Environment.Exit(0);
+                    break;
                 default:
                     WrongInput();
                     break;
