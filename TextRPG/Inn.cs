@@ -70,8 +70,15 @@ namespace TextRPG
         //휴식 기능 메서드
         public void Rest(Player player, ref Scenes scene)
         {
+            //현재 체력이 100이면
+            if(player.Hp >= 100) 
+            {
+                Console.WriteLine("\n체력이 이미 100입니다.");
+                Console.Write("아무 키나 입력하세요...");
+                Console.ReadLine();
+            }
             //골드가 500이상이면 휴식 성공
-            if(player.Gold >= 500)
+            else if (player.Gold >= 500)
             {
                 player.Hp = 100;
                 player.Gold -= 500;
