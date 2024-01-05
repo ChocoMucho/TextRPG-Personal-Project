@@ -19,19 +19,8 @@ namespace TextRPG
 {
     public class Player
     {
-        //싱글톤
-        /*private static Player   instance;
-        public static Player    Instance
-        { get 
-            {
-                if (instance == null)
-                    instance = new Player();
-                
-                return instance;
-            }
-        }*/
 
-        
+
 
         //========== 플레이어 기본 정보 ==========
         public int          Level { get; set; }
